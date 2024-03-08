@@ -1,0 +1,27 @@
+{
+	"version": "2.0.0",
+	"tasks": [
+		{
+			"type": "cppbuild",
+			"label": "C/C++: g++.exe 生成活动文件",
+			"command": "E:\\app download\\MinGW\\x86_64-8.1.0-release-win32-sjlj-rt_v6-rev0\\mingw64\\bin\\g++.exe",
+			"args": [
+				"-g",
+				"${file}",
+				"-o",
+				"${fileDirname}\\${fileBasenameNoExtension}.exe"
+			],
+			"options": {
+				"cwd": "E:\\app download\\MinGW\\x86_64-8.1.0-release-win32-sjlj-rt_v6-rev0\\mingw64\\bin"
+			},
+			"problemMatcher": [
+				"$gcc"
+			],
+			"group": {
+				"kind": "test",
+				"isDefault": true
+			},
+			"detail": "编译器: \"E:\\app download\\MinGW\\x86_64-8.1.0-release-win32-sjlj-rt_v6-rev0\\mingw64\\bin\\g++.exe\""
+		}
+	]
+}
