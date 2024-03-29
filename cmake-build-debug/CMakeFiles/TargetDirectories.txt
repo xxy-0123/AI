@@ -1,0 +1,3 @@
+D:/code/AI基础/cmake-build-debug/CMakeFiles/AI.dir
+D:/code/AI基础/cmake-build-debug/CMakeFiles/edit_cache.dir
+D:/code/AI基础/cmake-build-debug/CMakeFiles/rebuild_cache.dir

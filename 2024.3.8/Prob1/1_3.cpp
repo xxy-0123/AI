@@ -1,9 +1,11 @@
 #include<iostream>
 #include<queue>
 using namespace std;
+
 int g[10001][10001]={0};
 int state[10001]={0};
-int dis[10001]={0}; 
+int dis[10001]={0};
+#define _MAX 99999
 struct node{    
     friend bool operator< (node n1, node n2)
     {        
@@ -43,7 +45,7 @@ int dijkstra(int n){
     for(int i=0;i<n;i++){
         cout<<dis[i]<<" ";
     }
-    if(dis[n]!=INT16_MAX)return dis[n];
+    if(dis[n]!=_MAX)return dis[n];
     else return -1;
 }
 
@@ -56,7 +58,7 @@ int main(){
     }
     for(int i=0;i<10000;i++){
         state[i]=0;
-        dis[i]=INT16_MAX;
+        dis[i]=_MAX;
     }
     // for(int i=0;i<n;i++){
     //     cout<<dis[i]<<" ";
