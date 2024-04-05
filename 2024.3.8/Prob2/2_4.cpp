@@ -38,7 +38,7 @@ int f(struct node cur_node){
     return h+cur_node.count;
 };
 
-string dijkstra_8digits()
+string A_8digits()
 {
     while (!q.empty())
     {
@@ -102,5 +102,5 @@ int main()
     first_node.cur_x = x;
     f(first_node);
     q.push(first_node);
-    cout << dijkstra_8digits();
+    cout << A_8digits();
 }

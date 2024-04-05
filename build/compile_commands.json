@@ -1,0 +1,8 @@
+[
+{
+  "directory": "D:/code/AI_2024Spring/build",
+  "command": "\"E:\\app download\\MinGW\\x86_64-8.1.0-release-win32-sjlj-rt_v6-rev0\\mingw64\\bin\\x86_64-w64-mingw32-g++.exe\"   -g -o CMakeFiles\\AI.dir\\2024.3.8\\Prob2\\2_1.cpp.obj -c D:\\code\\AI_2024Spring\\2024.3.8\\Prob2\\2_1.cpp",
+  "file": "D:/code/AI_2024Spring/2024.3.8/Prob2/2_1.cpp",
+  "output": "CMakeFiles/AI.dir/2024.3.8/Prob2/2_1.cpp.obj"
+}
+]

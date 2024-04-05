@@ -4,6 +4,35 @@
     // 欲了解更多信息，请访问: https://go.microsoft.com/fwlink/?linkid=830387
     "version": "0.2.0",
     "configurations": [
+        {   
+            "name": "Python: run_classifier.py",
+            "type": "python",
+            "request": "launch",
+            // "program": "${workspaceFolder}/test.py",
+            // "program": "${workspaceFolder}/train.py",
+            "program": "${workspaceFolder}/run_classifier.py",
+            "console": "integratedTerminal",
+            // "env": {  
+            //     "CUDA_VISIBLE_DEVICES": "0",
+            //     // "CUDA_LAUNCH_BLOCKING": "1",
+            // },
+            "justMyCode":true,  // 如果是false的话就会进到别的子程序里面，为了调试的直观，设置true比较好
+// true就是调试的范围都是你写的代码
+            "args": [
+                       "--task_name", "CoLA", 
+                       "--do_train", "true",
+                       "--do_eval", "true",
+                       "--data_dir", "glue_data/CoLA",
+                       "--vocab_file", "uncased_L-2_H-128_A-2/vocab.txt",
+                       "--bert_config_file", "uncased_L-2_H-128_A-2/bert_config.json", 
+                       "--init_checkpoint", "uncased_L-2_H-128_A-2/bert_model.ckpt", 
+                       "--max_seq_length", "128" ,
+                       "--train_batch_size", "32",
+                       "--learning_rate", "2e-5" ,
+                       "--num_train_epochs", "3.0" ,
+                       "--output_dir", "tmp/CoLA_output"                   
+            ]       
+        },
         {
             "name": "g++.exe - 生成和调试活动文件",
             "type": "cppdbg",
