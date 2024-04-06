@@ -51,16 +51,14 @@ def visualize_maze_with_path(maze, path, interval, memory):
                 plt.fill_between([y - 0.5, y + 0.5], x - 0.5,
                                  x + 0.5, color=color, alpha=0.5)
 
-            new_colored_cells.clear()                      
+            new_colored_cells.clear()
 
             for x, y, step in memory:
-                if step == i :  # 当步数与当前迭代次数一致时，使用另一种颜色标记
+                if step == i:  # 当步数与当前迭代次数一致时，使用另一种颜色标记
                     color = 'blue'
-                    new_colored_cells.append((x,y))
+                    new_colored_cells.append((x, y))
                     plt.fill_between([y - 0.5, y + 0.5], x - 0.5,
-                                 x + 0.5, color=color, alpha=0.5)
-
-            
+                                     x + 0.5, color=color, alpha=0.5)
 
             # 设置坐标轴刻度和边框
             plt.xticks(range(len(maze[0])))

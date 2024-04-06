@@ -8,9 +8,9 @@ struct node
     string cur_s;
     int cur_x = 0;
     int count = 0;
-    int fn=0;
+    int fn = 0;
     string path;
-    friend bool operator< (node n1, node n2)
+    friend bool operator<(node n1, node n2)
     {
         return n1.fn > n2.fn;
     }
@@ -18,24 +18,50 @@ struct node
 
 int dx[4] = {0, -1, 0, 1};
 int dy[4] = {-1, 0, 1, 0};
-char step[4]={'u','l','d','r'};
+char step[4] = {'u', 'l', 'd', 'r'};
 priority_queue<node> q;
 set<string> vis;
 
 string target = "12345678x";
 
-int f(struct node cur_node){
-    int h=0;
-    int x1 = cur_node.cur_x / 3;
-    int y1 = cur_node.cur_x % 3;
-    for(int i=0;i<9;i++){
-        if(i==cur_node.cur_x){
-            h+=abs(x1-2)+abs(y1-2);
-        }else{
-            h+=abs(i/3-(cur_node.cur_s[i]-'0')/3)+abs(i%3-(cur_node.cur_s[i]-'0')%3);
+bool answer_available(string s)
+{
+    int cnt = 0;
+
+    for (int i = 0; i < 9; i++)
+    {
+        for (int j = i + 1; j < 9; j++)
+        {
+            if (s[i] == 'x' || s[j] == 'x')
+            {
+                continue;
+            }
+            if (s[i] > s[j])
+            {
+                cnt++;
+            }
         }
     }
-    return h+cur_node.count;
+    return cnt % 2;
+}
+
+int f(struct node cur_node)
+{
+    int h = 0;
+    int x1 = cur_node.cur_x / 3;
+    int y1 = cur_node.cur_x % 3;
+    for (int i = 0; i < 9; i++)
+    {
+        if (i == cur_node.cur_x)
+        {
+            h += abs(x1 - 2) + abs(y1 - 2);
+        }
+        else
+        {
+            h += abs(i / 3 - (cur_node.cur_s[i] - '0') / 3) + abs(i % 3 - (cur_node.cur_s[i] - '0') % 3);
+        }
+    }
+    return h + cur_node.count;
 };
 
 string A_8digits()
@@ -60,7 +86,7 @@ string A_8digits()
             string new_s = cur_node.cur_s;
             int new_x = x2 * 3 + y2;
             int new_count = cur_node.count + 1;
-            string new_path=cur_node.path+step[i];
+            string new_path = cur_node.path + step[i];
             swap(new_s[cur_node.cur_x], new_s[new_x]);
             if (vis.count(new_s))
             {
@@ -74,8 +100,8 @@ string A_8digits()
             new_node.cur_s = new_s;
             new_node.cur_x = new_x;
             new_node.count = new_count;
-            new_node.fn=f(new_node);
-            new_node.path=new_path;
+            new_node.fn = f(new_node);
+            new_node.path = new_path;
             q.push(new_node);
         }
     }
@@ -87,7 +113,7 @@ int main()
     string s = "";
     char t;
     int x = 0;
-    for (int i=0;i<9;i++)
+    for (int i = 0; i < 9; i++)
     {
         cin >> t;
         s += t;
@@ -102,5 +128,12 @@ int main()
     first_node.cur_x = x;
     f(first_node);
     q.push(first_node);
-    cout << A_8digits();
+    if (answer_available(s))
+    {
+        cout << "unsolvable";
+    }
+    else
+    {
+        cout << A_8digits();
+    }
 }
