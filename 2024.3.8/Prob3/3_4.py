@@ -2,19 +2,22 @@
 待补充代码：对搜索过的格子染色
 """
 import matplotlib.pyplot as plt
-
+import queue
 directions = [(1, 0), (-1, 0), (0, 1), (0, -1)]
 
 
-def bfs(maze, n, m):
+def dijkstra(maze, n, m):
     visited = set()
     visited.add((0, 0))
     memory = [(0, 0, 0)]
-    queue = [(0, 0, 0)]  # (row, col, steps)
+    distances = {(i, j): float('inf') for i in range(n) for j in range(m)}
+    distances[(0, 0)] = 0
+    pq = queue.PriorityQueue()
+    pq.put((n + m - 2, (0, 0, 0)))
     parents = [[None] * m for _ in range(n)]
     path = []
     while queue:
-        row, col, steps = queue.pop(0)
+        dis, (row, col, steps) = pq.get()
         if (row, col) == (n - 1, m - 1):
             path.append((row, col, steps))
             while steps:
@@ -27,8 +30,9 @@ def bfs(maze, n, m):
             new_row, new_col = row + dr, col + dc
             if 0 <= new_row < n and 0 <= new_col < m and maze[new_row][new_col] == 0 and (new_row, new_col) not in visited:
                 visited.add((new_row, new_col))
+                new_dist = steps + abs(n - 1 - row) + abs(m - 1 - col)
                 memory.append((new_row, new_col, steps + 1))
-                queue.append((new_row, new_col, steps + 1))
+                pq.put((new_dist, (new_row, new_col, steps + 1)))
                 parents[new_row][new_col] = (row, col)
 
 
@@ -51,16 +55,14 @@ def visualize_maze_with_path(maze, path, interval, memory):
                 plt.fill_between([y - 0.5, y + 0.5], x - 0.5,
                                  x + 0.5, color=color, alpha=0.5)
 
-            new_colored_cells.clear()                      
+            new_colored_cells.clear()
 
             for x, y, step in memory:
-                if step == i :  # 当步数与当前迭代次数一致时，使用另一种颜色标记
+                if step == i:  # 当步数与当前迭代次数一致时，使用另一种颜色标记
                     color = 'blue'
-                    new_colored_cells.append((x,y))
+                    new_colored_cells.append((x, y))
                     plt.fill_between([y - 0.5, y + 0.5], x - 0.5,
-                                 x + 0.5, color=color, alpha=0.5)
-
-            
+                                     x + 0.5, color=color, alpha=0.5)
 
             # 设置坐标轴刻度和边框
             plt.xticks(range(len(maze[0])))
@@ -83,6 +85,6 @@ for _ in range(n):
     row = list(map(int, input().split()))
     maze.append(row)
 
-path, memory = bfs(maze, n, m)
+path, memory = dijkstra(maze, n, m)
 # 可视化迷宫及路径
 visualize_maze_with_path(maze, path, interval, memory)

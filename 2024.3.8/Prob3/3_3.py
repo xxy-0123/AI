@@ -27,9 +27,8 @@ def dijkstra(maze, n, m):
         for dr, dc in directions:
             new_row, new_col = row + dr, col + dc
             if 0 <= new_row < n and 0 <= new_col < m and maze[new_row][new_col] == 0:
-                new_dist = steps + 1
-                if new_dist < distances[(new_row, new_col)]:
-                    distances[(new_row, new_col)] = new_dist
+                if steps + 1 < distances[(new_row, new_col)]:
+                    distances[(new_row, new_col)] = steps + 1
                     memory.append((new_row, new_col, steps + 1))
                     pq.put((steps + 1, (new_row, new_col)))
                     parents[new_row][new_col] = (row, col)
