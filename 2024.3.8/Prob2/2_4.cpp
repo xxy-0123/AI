@@ -105,7 +105,7 @@ string A_8digits()
             q.push(new_node);
         }
     }
-    return "unsolvable";
+    return "-1";
 }
 
 int main()
@@ -130,7 +130,7 @@ int main()
     q.push(first_node);
     if (answer_available(s))
     {
-        cout << "unsolvable";
+        cout << "-1";
     }
     else
     {
