@@ -1,7 +1,8 @@
 #include<iostream>
 #include<queue>
 using namespace std;
-int g[10001][10001]={0};
+vector<int> g[10001];
+//int g[10001][10001]={0};
 int visit[10001]={0};
 int parent[10001]={0}; 
 queue<int> q;
@@ -19,15 +20,12 @@ int bfs(int n){
             return count;
         }
         q.pop();
-        //if(visit[startpoint]==1){continue;}
         visit[startpoint]=1;
-        for(int i=1;i<=n;i++){
+        for(auto i:g[startpoint]){
             if(visit[i]==0){
-                if(g[startpoint][i]==1){
-                    q.push(i);
-                    parent[i]=startpoint;
-                    visit[i]=1;
-                }
+                q.push(i);
+                parent[i]=startpoint;
+                visit[i]=1;
             }
         }
     }
@@ -39,7 +37,7 @@ int main(){
     cin>>n>>m;
     for(int i=0;i<m;i++){
         cin>>start>>end;
-        g[start][end]=1;
+        g[start].push_back(end);
     }
     for(int i=0;i<10000;i++){
         visit[i]=0;

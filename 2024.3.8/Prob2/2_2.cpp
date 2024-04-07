@@ -56,7 +56,6 @@ int bfs_8digits()
             q.push(new_node);
         }
     }
-    //for(auto x:vis)cout<<x<<endl;
     return -1;
 }
 
@@ -68,10 +67,6 @@ int main()
     for (int i=0;i<9;i++)
     {
         cin >> t;
-//        if (t != 'x' || (t < '1' || t > '9'))
-//        {
-//            continue;
-//        }
         s += t;
         if (t == 'x')
         {

@@ -1,6 +1,7 @@
 #include <iostream>
 #include <queue>
 #include <set>
+#include <map>
 using namespace std;
 
 struct node
@@ -15,12 +16,12 @@ struct node
         return n1.fn > n2.fn;
     }
 }; //状态，位置，层数
-
 int dx[4] = {0, -1, 0, 1};
 int dy[4] = {-1, 0, 1, 0};
-char step[4] = {'u', 'l', 'd', 'r'};
+//char step[4] = {'u', 'l', 'd', 'r'};
+char step[4] = {'l', 'u', 'r', 'd'};
 priority_queue<node> q;
-set<string> vis;
+map<string,int> vis;
 
 string target = "12345678x";
 
@@ -54,11 +55,11 @@ int f(struct node cur_node)
     {
         if (i == cur_node.cur_x)
         {
-            h += abs(x1 - 2) + abs(y1 - 2);
+           // h += abs(x1 - 2) + abs(y1 - 2);
         }
         else
         {
-            h += abs(i / 3 - (cur_node.cur_s[i] - '0') / 3) + abs(i % 3 - (cur_node.cur_s[i] - '0') % 3);
+            h += abs(i / 3 - (cur_node.cur_s[i] - '1') / 3) + abs(i % 3 - (cur_node.cur_s[i] - '1') % 3);
         }
     }
     return h + cur_node.count;
@@ -75,6 +76,7 @@ string A_8digits()
             return cur_node.path;
         }
         q.pop();
+        if(vis[cur_node.cur_s]<cur_node.count){continue;}
         int x1 = cur_node.cur_x / 3;
         int y1 = cur_node.cur_x % 3;
 
@@ -88,13 +90,13 @@ string A_8digits()
             int new_count = cur_node.count + 1;
             string new_path = cur_node.path + step[i];
             swap(new_s[cur_node.cur_x], new_s[new_x]);
-            if (vis.count(new_s))
+            if (vis.count(new_s)&&vis[new_s]<=new_count)
             {
                 continue;
             }
             else
             {
-                vis.insert(new_s);
+                vis[new_s]=new_count;
             }
             struct node new_node;
             new_node.cur_s = new_s;
@@ -105,7 +107,7 @@ string A_8digits()
             q.push(new_node);
         }
     }
-    return "-1";
+    return "unsolvable";
 }
 
 int main()
@@ -122,7 +124,7 @@ int main()
             x = i;
         }
     }
-    vis.insert(s);
+    vis[s]=0;
     struct node first_node;
     first_node.cur_s = s;
     first_node.cur_x = x;
@@ -130,7 +132,7 @@ int main()
     q.push(first_node);
     if (answer_available(s))
     {
-        cout << "-1";
+        cout << "unsolvable";
     }
     else
     {
