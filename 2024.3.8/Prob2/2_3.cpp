@@ -60,7 +60,6 @@ int dijkstra_8digits()
             q.push(new_node);
         }
     }
-    //for(auto x:vis)cout<<x<<endl;
     return -1;
 }
 

@@ -36,18 +36,16 @@ def dijkstra(maze, n, m):
 
 
 def visualize_maze_with_path(maze, path, interval, memory):
-    # 绘制路径
     if path:
         path_x, path_y, steps = zip(*path)
-        plt.figure(figsize=(len(maze[0]), len(maze)))  # 设置图形大小
-        plt.imshow(maze, cmap='Greys', interpolation='nearest')  # 使用灰度色图，并关闭插值
+        plt.figure(figsize=(len(maze[0]), len(maze)))
+        plt.imshow(maze, cmap='Greys', interpolation='nearest') 
 
         new_colored_cells = []
 
         for i in range(len(path)):
             plt.plot(path_y[:i + 1], path_x[:i + 1], marker='o',
                      markersize=8, color='red', linewidth=3)
-            # 每次迭代后将搜索过的格子染色
 
             for x, y in new_colored_cells:
                 color = 'yellow'
@@ -57,13 +55,12 @@ def visualize_maze_with_path(maze, path, interval, memory):
             new_colored_cells.clear()
 
             for x, y, step in memory:
-                if step == i:  # 当步数与当前迭代次数一致时，使用另一种颜色标记
+                if step == i: 
                     color = 'blue'
                     new_colored_cells.append((x, y))
                     plt.fill_between([y - 0.5, y + 0.5], x - 0.5,
                                      x + 0.5, color=color, alpha=0.5)
 
-            # 设置坐标轴刻度和边框
             plt.xticks(range(len(maze[0])))
             plt.yticks(range(len(maze)))
             plt.gca().set_xticks(
@@ -71,7 +68,7 @@ def visualize_maze_with_path(maze, path, interval, memory):
             plt.gca().set_yticks(
                 [y - 0.5 for y in range(1, len(maze))], minor=True)
             plt.grid(which="minor", color="black", linestyle='-', linewidth=2)
-            plt.axis('on')  # 显示坐标轴
+            plt.axis('on')
             plt.pause(interval)
         plt.show()
 
@@ -85,5 +82,4 @@ for _ in range(n):
     maze.append(row)
 
 path, memory = dijkstra(maze, n, m)
-# 可视化迷宫及路径
 visualize_maze_with_path(maze, path, interval, memory)
