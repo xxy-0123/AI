@@ -18,6 +18,7 @@ def dijkstra(maze, n, m):
         steps, (row, col) = pq.get()
         if (row, col) == (n - 1, m - 1):
             path.append((row, col, steps))
+            print(steps)
             while steps:
                 steps -= 1
                 row, col = parents[row][col]

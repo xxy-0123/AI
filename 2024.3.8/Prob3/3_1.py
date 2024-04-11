@@ -17,6 +17,7 @@ def bfs(maze, n, m):
         row, col, steps = queue.pop(0)
         if (row, col) == (n - 1, m - 1):
             path.append((row, col, steps))
+            print(steps)
             while steps:
                 steps -= 1
                 row, col = parents[row][col]
@@ -84,3 +85,22 @@ for _ in range(n):
 path, memory = bfs(maze, n, m)
 # 可视化迷宫及路径
 visualize_maze_with_path(maze, path, interval, memory)
+
+
+# 15 15
+# 0 0 0 1 0 0 1 0 0 0 0 1 1 1 1 
+# 1 0 0 0 1 0 1 0 1 1 0 0 0 0 0 
+# 0 0 1 0 1 0 0 0 0 0 1 1 0 1 1 
+# 1 0 0 0 1 0 1 1 0 0 0 0 0 1 0
+# 1 0 1 0 0 0 0 1 0 1 0 1 0 0 1
+# 0 0 1 0 0 1 0 1 0 1 0 1 0 1 0
+# 0 1 0 0 0 1 0 0 0 1 0 0 1 1 0
+# 0 1 0 0 1 0 0 1 0 0 1 0 1 0 0 
+# 0 0 1 0 0 0 0 0 1 0 1 0 0 0 1 
+# 0 1 0 0 1 0 1 0 0 1 0 0 1 1 0
+# 0 0 0 1 0 0 0 1 0 0 0 0 0 0 1
+# 0 1 0 1 1 0 1 0 1 1 0 1 1 0 0
+# 0 0 0 0 0 0 0 0 0 0 0 0 0 1 0
+# 1 0 1 0 1 1 0 1 1 0 0 0 0 0 0
+# 1 0 1 0 0 0 0 0 0 1 0 1 1 0 0
+

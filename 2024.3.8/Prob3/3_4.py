@@ -6,7 +6,7 @@ import queue
 directions = [(1, 0), (-1, 0), (0, 1), (0, -1)]
 
 
-def dijkstra(maze, n, m):
+def A(maze, n, m):
     visited = set()
     visited.add((0, 0))
     memory = [(0, 0, 0)]
@@ -20,6 +20,7 @@ def dijkstra(maze, n, m):
         dis, (row, col, steps) = pq.get()
         if (row, col) == (n - 1, m - 1):
             path.append((row, col, steps))
+            print(steps)
             while steps:
                 steps -= 1
                 row, col = parents[row][col]
@@ -85,6 +86,6 @@ for _ in range(n):
     row = list(map(int, input().split()))
     maze.append(row)
 
-path, memory = dijkstra(maze, n, m)
+path, memory = A(maze, n, m)
 # 可视化迷宫及路径
 visualize_maze_with_path(maze, path, interval, memory)
