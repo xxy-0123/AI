@@ -34,10 +34,9 @@ def bfs(maze, n, m):
 
 
 def visualize_maze_with_path(maze, path, interval, memory):
-    # 绘制路径
     if path:
         path_x, path_y, steps = zip(*path)
-        plt.figure(figsize=(len(maze[0]), len(maze)))
+        plt.figure(figsize=(len(maze[0])/2, len(maze)/2))
         plt.imshow(maze, cmap='Greys', interpolation='nearest')
 
         new_colored_cells = []

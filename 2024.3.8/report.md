@@ -18,17 +18,15 @@
 
 ## **1.** **算法回顾**
 
-
-
 ### • 1.1: BFS（每条边的权重为1）
 
 ```c++
 #include<iostream>
 #include<queue>
 using namespace std;
-vector<int> g[10001];
-int visit[10001]={0};
-int parent[10001]={0}; 
+vector<int> g[100001];
+int visit[100001]={0};
+int parent[100001]={0}; 
 queue<int> q;
 
 int bfs(int n){
@@ -63,7 +61,7 @@ int main(){
         cin>>start>>end;
         g[start].push_back(end);
     }
-    for(int i=0;i<10000;i++){
+    for(int i=0;i<100000;i++){
         visit[i]=0;
         parent[i]=0;
     }
@@ -71,6 +69,14 @@ int main(){
     cout<<bfs(n);
 }
 ```
+
+V是顶点数量，E是边数量
+
+时间复杂度：O(E)
+
+空间复杂度：O(V+E）
+
+使用邻接表，会从起始点遍历可达点，遍历的最差情况是要遍历图中所有的边，因此时间复杂度是O(E)。题目需要记录邻接表(大小为E)、队列`q`(大小为V)、访问节点数组`visit`(大小为V)、父节点数组`parent`（大小为V）。
 
 
 
@@ -80,10 +86,10 @@ int main(){
 #include <iostream>
 #include <queue>
 using namespace std;
-vector<pair<int, int>> g[10001];
-int state[10001] = {0};
-int dis[10001] = {0};
-#define _MAX 99999
+vector<pair<int, int>> g[100001];
+int state[100001] = {0};
+int dis[100001] = {0};
+#define _MAX 9999999
 
 int dijkstra(int n)
 {
@@ -128,7 +134,7 @@ int main()
         cin >> start >> end >> value;
         g[start].push_back({end, value});
     }
-    for (int i = 0; i < 10000; i++)
+    for (int i = 0; i < 100000; i++)
     {
         state[i] = 0;
         dis[i] = _MAX;
@@ -137,7 +143,11 @@ int main()
 }
 ```
 
+V是顶点数量，E是边数量
 
+时间复杂度：O(V+E)
+
+空间复杂度：O(V+E)
 
 ### • 1.3: 堆优化版Dijkstra（图最短路）
 
@@ -146,10 +156,10 @@ int main()
 #include <queue>
 using namespace std;
 
-vector<pair<int, int>> g[10001];
-int state[10001] = {0};
-int dis[10001] = {0};
-#define _MAX 99999
+vector<pair<int, int>> g[100001];
+int state[100001] = {0};
+int dis[100001] = {0};
+#define _MAX 99999999
 struct node
 {
     friend bool operator<(node n1, node n2)
@@ -218,7 +228,11 @@ int main()
 }
 ```
 
+V是顶点数量，E是边数量
 
+时间复杂度：O(VlogV)
+
+空间复杂度：O(V+E)
 
 ## **2.** **⼋数码问题**
 
@@ -236,7 +250,7 @@ struct node
 {
     string cur_s;
     int cur_x = 0;
-}; //状态，位置，层数
+}; //状态，位置
 
 int dx[4] = {0, -1, 0, 1};
 int dy[4] = {-1, 0, 1, 0};
@@ -295,10 +309,9 @@ int main()
     st.push(first_node);
     cout<<dfs_8digits();
 }
-
 ```
 
-
+​	使用`stack`用于dfs搜索过程中存储待搜索的节点，如果使用递归会导致调用层数过多报错。每次尝试将空格与周边存在的邻格交换，直到与目标状态一致。会使用`set`记录访问过的状态避免重复搜索。
 
 ### • 2.2: BFS（求解最少步数）
 
@@ -385,10 +398,9 @@ int main()
     q.push(first_node);
     cout<<bfs_8digits();
 }
-
 ```
 
-
+​	使用`queue`用于bfs搜索过程中存储待搜索的状态，通过逐层扩展来找到从初始状态到目标状态的最少步数。每次尝试将空格与周边存在的邻格交换，直到与目标状态一致。会使用`set`记录访问过的状态避免重复搜索。相比于dfs，bfs通常能够更快地找到解，且能够找到最短路径。
 
 ### • 2.3: Dijkstra（特殊的A star）
 
@@ -481,6 +493,8 @@ int main()
 }
 ```
 
+​	使用`priority_queue`用于dijkstra搜索过程中存储待搜索的状态，保证每次从队列中取出的节点是当前最小步数的节点，虽然在这里和bfs效果相同，因为每一步代价都是一样的。每次尝试将空格与周边存在的邻格交换，直到与目标状态一致。会使用`set`记录访问过的状态避免重复搜索。由于交换步骤的代价肯定是1，所以效果与bfs一致。
+
 
 
 ### • 2.4: A star（求解最少步数）
@@ -542,7 +556,7 @@ int f(struct node cur_node)
     {
         if (i == cur_node.cur_x)
         {
-           // h += abs(x1 - 2) + abs(y1 - 2);
+           continue;
         }
         else
         {
@@ -629,9 +643,7 @@ int main()
 
 ```
 
-
-
-
+​	同样使用`priority_queue`保证了每个处理的节点都是当前步数和估计剩余步数之和最小的节点。每次尝试将空格与周边存在的邻格交换，直到与目标状态一致。会使用`map`记录访问过的节点以及对应的`fn`，如果访问过的节点的`fn`更新后会比`map`记录中的小，那么就会修改`map`并将节点修改为新状态加入`priority_queue`。函数`f`是评价函数$f(n)=g(n)+h(n)$，$h(n)$的计算方法在这里是计算1~8到正确位置的曼哈顿距离。A*算法的主要精髓在评价函数$f(n)=g(n)+h(n)$。*相比于Dijkstra算法，A*算法在启发式函数的指导下能够更加高效地找到最短路径。当$h(n)=0$ 时算法变为Dijkstra；当$h(n)=0$ 并且边权为1时变为 bfs。
 
 ## 小练习
 

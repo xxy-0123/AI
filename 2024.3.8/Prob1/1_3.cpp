@@ -2,10 +2,10 @@
 #include <queue>
 using namespace std;
 
-vector<pair<int, int>> g[10001];
-int state[10001] = {0};
-int dis[10001] = {0};
-#define _MAX 99999
+vector<pair<int, int>> g[100001];
+int state[100001] = {0};
+int dis[100001] = {0};
+#define _MAX 99999999
 struct node
 {
     friend bool operator<(node n1, node n2)
@@ -65,13 +65,11 @@ int main()
         cin >> start >> end >> value;
         g[start].push_back({end, value});
     }
-    for (int i = 0; i < 10000; i++)
+    for (int i = 0; i < 100000; i++)
     {
         state[i] = 0;
         dis[i] = _MAX;
     }
-    // for(int i=0;i<n;i++){
-    //     cout<<dis[i]<<" ";
-    // }
+
     cout << dijkstra(n);
 }

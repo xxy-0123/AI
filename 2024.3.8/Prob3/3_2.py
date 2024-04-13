@@ -22,7 +22,7 @@ def dfs(maze, n, m):
                 row, col = parents[row][col]
                 path.append((row, col, steps))
             path.reverse()
-            return path, visited, memory
+            return path, memory
         for dr, dc in directions:
             new_row, new_col = row + dr, col + dc
             if 0 <= new_row < n and 0 <= new_col < m and maze[new_row][new_col] == 0 and (new_row, new_col) not in visited:
@@ -36,7 +36,7 @@ def visualize_maze_with_path(maze, path, interval, memory):
     # 绘制路径
     if path:
         path_x, path_y, steps = zip(*path)
-        plt.figure(figsize=(len(maze[0]), len(maze)))
+        plt.figure(figsize=(len(maze[0])/2, len(maze)/2))
         plt.imshow(maze, cmap='Greys', interpolation='nearest') 
 
         new_colored_cells = []
@@ -78,5 +78,5 @@ for _ in range(n):
     row = list(map(int, input().split()))
     maze.append(row)
 
-path, visited, memory = dfs(maze, n, m)
+path, memory = dfs(maze, n, m)
 visualize_maze_with_path(maze, path, interval, memory)
