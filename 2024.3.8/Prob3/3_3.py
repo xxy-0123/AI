@@ -1,6 +1,3 @@
-"""
-待补充代码：对搜索过的格子染色
-"""
 import matplotlib.pyplot as plt
 import queue
 directions = [(1, 0), (-1, 0), (0, 1), (0, -1)]

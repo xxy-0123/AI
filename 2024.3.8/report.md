@@ -76,7 +76,7 @@ V是顶点数量，E是边数量
 
 空间复杂度：O(V+E）
 
-使用邻接表，会从起始点遍历可达点，遍历的最差情况是要遍历图中所有的边，因此时间复杂度是O(E)。题目需要记录邻接表(大小为E)、队列`q`(大小为V)、访问节点数组`visit`(大小为V)、父节点数组`parent`（大小为V）。
+使用邻接表，会从起始点遍历可达点，遍历的最差情况是要遍历图中所有的边，因此时间复杂度是O(E)。题目需要记录邻接表(大小为E)、队列`q`(大小为V)、访问节点数组`visit`(大小为V)、父节点数组`parent`（大小为V），因此空间复杂度是O(V+E)。
 
 
 
@@ -145,9 +145,13 @@ int main()
 
 V是顶点数量，E是边数量
 
-时间复杂度：O(V+E)
+时间复杂度：O(V+E²)
 
 空间复杂度：O(V+E)
+
+​	使用邻接表，会从起始点依次选择未访问的节点中距离起点最近的节点进行扩展，直到所有可达的顶点都被访问过。在每次扩展时，更新到达附近节点的最短距离。要遍历图中所有的边，并且每次都要寻找距离起点最近的节点，因此时间复杂度是O(E)。
+
+​	题目需要记录邻接表`g`(大小为E、每个元素是一个 pair，表示到达的顶点和边的权重）、记录更新状态的数组`state`(大小为V)、记录到节点距离的数组`dis`(大小为V)，因此空间复杂度是O(V+E)。
 
 ### • 1.3: 堆优化版Dijkstra（图最短路）
 
@@ -230,9 +234,15 @@ int main()
 
 V是顶点数量，E是边数量
 
-时间复杂度：O(VlogV)
+时间复杂度：O(VlogV+E)
 
 空间复杂度：O(V+E)
+
+​	使用邻接表，会从起始点依次选择未访问的节点中距离起点最近的顶点进行扩展，直到所有可达的顶点都被访问过。在每次扩展时，更新到达附近节点的最短距离。要遍历图中所有的边，并且每次优先队列都要通过堆（速度为logV）给出距离起点最近的节点，因此时间复杂度是O(VlogV+E)。
+
+​	题目需要记录邻接表`g`(大小为E、每个元素是一个 pair，表示到达的顶点和边的权重）、记录更新状态的数组`state`(大小为V)、记录到节点最小距离的数组`dis`(大小为V)、优先队列`q`（大小为V），因此空间复杂度是O(V+E)。
+
+
 
 ## **2.** **⼋数码问题**
 
@@ -270,7 +280,7 @@ int dfs_8digits()
         int y1 = cur_node.cur_x % 3;
 
         for (int i = 0; i < 4; i++) {
-            int x2 = dx[i] + x1, y2 = dy[i] + y1; //移动后的x位置
+            int x2 = dx[i] + x1, y2 = dy[i] + y1; 
             if (x2 < 0 || y2 < 0 || x2 > 2 || y2 > 2)
                 continue;
             string new_s = cur_node.cur_s;
@@ -311,7 +321,11 @@ int main()
 }
 ```
 
+​	八数码dfs：由于每步操作产生4个分支，受最大搜索深度d的影响，八数码dfs的时间复杂度为O(4*d)，空间复杂度在未空间优化、剪枝的情况下应该是$9！$
+
 ​	使用`stack`用于dfs搜索过程中存储待搜索的节点，如果使用递归会导致调用层数过多报错。每次尝试将空格与周边存在的邻格交换，直到与目标状态一致。会使用`set`记录访问过的状态避免重复搜索。
+
+
 
 ### • 2.2: BFS（求解最少步数）
 
@@ -352,7 +366,7 @@ int bfs_8digits()
 
         for (int i = 0; i < 4; i++)
         {
-            int x2 = dx[i] + x1, y2 = dy[i] + y1; //移动后的x位置
+            int x2 = dx[i] + x1, y2 = dy[i] + y1;
             if (x2 < 0 || y2 < 0 || x2 > 2 || y2 > 2)
                 continue;
             string new_s = cur_node.cur_s;
@@ -400,7 +414,11 @@ int main()
 }
 ```
 
-​	使用`queue`用于bfs搜索过程中存储待搜索的状态，通过逐层扩展来找到从初始状态到目标状态的最少步数。每次尝试将空格与周边存在的邻格交换，直到与目标状态一致。会使用`set`记录访问过的状态避免重复搜索。相比于dfs，bfs通常能够更快地找到解，且能够找到最短路径。
+​	八数码bfs：由于每步操作产生4个分支，受最大搜索深度d的影响，八数码bfs的时间复杂度为O(4^d)，空间复杂度在未空间优化、剪枝的情况下应该是$9！$
+
+​	使用`queue`用于bfs搜索过程中存储待搜索的状态，通过逐层扩展来找到从初始状态到目标状态的最少步数。每次尝试将空格与周边存在的邻格交换，直到与目标状态一致。会使用`set`记录访问过的状态避免重复搜索。
+
+​	相比于dfs，bfs通常能够更快地找到解，且能够找到最短路径。
 
 ### • 2.3: Dijkstra（特殊的A star）
 
@@ -445,7 +463,7 @@ int dijkstra_8digits()
 
         for (int i = 0; i < 4; i++)
         {
-            int x2 = dx[i] + x1, y2 = dy[i] + y1; //移动后的x位置
+            int x2 = dx[i] + x1, y2 = dy[i] + y1; 
             if (x2 < 0 || y2 < 0 || x2 > 2 || y2 > 2)
                 continue;
             string new_s = cur_node.cur_s;
@@ -493,7 +511,11 @@ int main()
 }
 ```
 
-​	使用`priority_queue`用于dijkstra搜索过程中存储待搜索的状态，保证每次从队列中取出的节点是当前最小步数的节点，虽然在这里和bfs效果相同，因为每一步代价都是一样的。每次尝试将空格与周边存在的邻格交换，直到与目标状态一致。会使用`set`记录访问过的状态避免重复搜索。由于交换步骤的代价肯定是1，所以效果与bfs一致。
+​	八数码dijkstra：由于每步操作产生4个分支，最大搜索深度d，`priority_queue`内部需要堆排序，八数码dijkstra的时间复杂度为O(log4d*4^d)，空间复杂度在未空间优化、剪枝的情况下应该是$9！$
+
+​	使用`priority_queue`用于dijkstra搜索过程中存储待搜索的状态，保证每次从队列中取出的节点是当前最小步数的节点，虽然在这里和bfs效果相同，因为每一步代价都是一样的。每次尝试将空格与周边存在的邻格交换，直到与目标状态一致。会使用`set`记录访问过的状态避免重复搜索。
+
+​	由于交换步骤的代价肯定是1，所以效果与bfs一致。
 
 
 
@@ -583,7 +605,7 @@ string A_8digits()
 
         for (int i = 0; i < 4; i++)
         {
-            int x2 = dx[i] + x1, y2 = dy[i] + y1; //移动后的x位置
+            int x2 = dx[i] + x1, y2 = dy[i] + y1; 
             if (x2 < 0 || y2 < 0 || x2 > 2 || y2 > 2)
                 continue;
             string new_s = cur_node.cur_s;
@@ -640,10 +662,377 @@ int main()
         cout << A_8digits();
     }
 }
+```
+
+​	八数码`A*`：由于每步操作产生4个分支，最大搜索深度d，`priority_queue`内部需要堆排序，八数码`A*`的时间复杂度为O(log4d*4^d)，空间复杂度在未空间优化、剪枝的情况下应该是$9！$
+
+​	同样使用`priority_queue`保证了每个处理的节点都是当前步数和估计剩余步数之和最小的节点。每次尝试将空格与周边存在的邻格交换，直到与目标状态一致。会使用`map`记录访问过的节点以及对应的`fn`，如果访问过的节点的`fn`更新后会比`map`记录中的小，那么就会修改`map`并将节点修改为新状态加入`priority_queue`。函数`f`是评价函数$f(n)=g(n)+h(n)$，$h(n)$的计算方法在这里是计算1~8到正确位置的曼哈顿距离。
+
+​	`A*`算法的主要精髓在评价函数$f(n)=g(n)+h(n)$。相比于Dijkstra算法，A*算法在评价函数下能够更快地找到最短路径。当$h(n)=0$ 时算法变为Dijkstra；当$h(n)=0$ 并且边权为1时变为 bfs。
+
+
+
+## **3.** **迷宫问题**
+
+### • 3.1: DFS
+
+```python
+import matplotlib.pyplot as plt
+
+directions = [(1, 0), (0, -1), (-1, 0), (0, 1)]
+
+
+def dfs(maze, n, m):
+    visited = set()
+    visited.add((0, 0))
+    memory = [(0, 0, 0)]
+    stack = [(0, 0, 0)]  # (row, col, steps)
+    parents = [[None] * m for _ in range(n)]
+    path = []
+    global_step = 0
+    while stack:
+        row, col, steps = stack.pop()
+        global_step+=1
+        if (row, col) == (n - 1, m - 1):
+            path.append((row, col, steps))
+            while steps and not (row==0 and col == 0):
+                row, col ,steps= parents[row][col]
+                path.append((row, col, steps))
+            path.reverse()
+            return path, memory
+        for dr, dc in directions:
+            new_row, new_col = row + dr, col + dc
+            if 0 <= new_row < n and 0 <= new_col < m and maze[new_row][new_col] == 0 and (new_row, new_col) not in visited:
+                visited.add((new_row, new_col))
+                memory.append((new_row, new_col, global_step))
+                stack.append((new_row, new_col, global_step))
+                parents[new_row][new_col] = (row, col, steps)
+
+
+def visualize_maze_with_path(maze, path, interval, memory):
+    if path:
+        path_x, path_y, steps = zip(*path)
+        plt.figure(figsize=(len(maze[0])/2, len(maze)/2))
+        plt.imshow(maze, cmap='Greys', interpolation='nearest') 
+
+        new_colored_cells = []
+
+        k=0
+        for i in range(steps[-1]+1):
+            if(i==steps[k]):
+                plt.plot(path_y[:k + 1], path_x[:k + 1], marker='o',
+                        markersize=8, color='red', linewidth=3)
+                k+=1
+            for x, y in new_colored_cells:
+                color = 'yellow'
+                plt.fill_between([y - 0.5, y + 0.5], x - 0.5,
+                                 x + 0.5, color=color, alpha=0.5)
+
+            new_colored_cells.clear()
+
+            for x, y, step in memory:
+                if step == i: 
+                    color = 'blue'
+                    new_colored_cells.append((x, y))
+                    plt.fill_between([y - 0.5, y + 0.5], x - 0.5,
+                                     x + 0.5, color=color, alpha=0.5)
+
+            plt.xticks(range(len(maze[0])))
+            plt.yticks(range(len(maze)))
+            plt.gca().set_xticks(
+                [x - 0.5 for x in range(1, len(maze[0]))], minor=True)
+            plt.gca().set_yticks(
+                [y - 0.5 for y in range(1, len(maze))], minor=True)
+            plt.grid(which="minor", color="black", linestyle='-', linewidth=2)
+            plt.axis('on')
+            plt.pause(interval)
+        plt.show()
+
+
+interval = 0.25
+
+n, m = map(int, input().split())
+maze = []
+for _ in range(n):
+    row = list(map(int, input().split()))
+    maze.append(row)
+
+path, memory = dfs(maze, n, m)
+visualize_maze_with_path(maze, path, interval, memory)
+```
+
+​	dfs函数用于进行搜索，使用栈`stack`来存储当前的位置以及路径的步数，每次探索时，会通过二维列表`parents` 记录父节点方便回溯，最后得到路径列表`path`和搜索过程中的内存列表`memory`，其中`path`和`memory`的元素都由三元组组成，包含 (row, col, steps)，方便在可视化时按步数动态展示。
+
+​	此处`dfs` 函数的时间复杂度和空间复杂度均为 $O(N)$，其中 $N$ 是迷宫中的格子数。
+
+![dfs.gif](dfs.gif)
+
+### • 3.2: BFS
+
+```python
+import matplotlib.pyplot as plt
+
+directions = [(1, 0), (-1, 0), (0, 1), (0, -1)]
+
+
+def bfs(maze, n, m):
+    visited = set()
+    visited.add((0, 0))
+    memory = [(0, 0, 0)]
+    queue = [(0, 0, 0)]  # (row, col, steps)
+    parents = [[None] * m for _ in range(n)]
+    path = []
+    while queue:
+        row, col, steps = queue.pop(0)
+        if (row, col) == (n - 1, m - 1):
+            path.append((row, col, steps))
+            print(steps)
+            while steps:
+                steps -= 1
+                row, col = parents[row][col]
+                path.append((row, col, steps))
+            path.reverse()
+            return path, memory
+        for dr, dc in directions:
+            new_row, new_col = row + dr, col + dc
+            if 0 <= new_row < n and 0 <= new_col < m and maze[new_row][new_col] == 0 and (new_row, new_col) not in visited:
+                visited.add((new_row, new_col))
+                memory.append((new_row, new_col, steps + 1))
+                queue.append((new_row, new_col, steps + 1))
+                parents[new_row][new_col] = (row, col)
+
+
+def visualize_maze_with_path(maze, path, interval, memory):
+    if path:
+        path_x, path_y, steps = zip(*path)
+        plt.figure(figsize=(len(maze[0])/2, len(maze)/2))
+        plt.imshow(maze, cmap='Greys', interpolation='nearest')
+
+        new_colored_cells = []
+
+        for i in range(len(path)):
+            plt.plot(path_y[:i + 1], path_x[:i + 1], marker='o',
+                     markersize=8, color='red', linewidth=3)
+
+            for x, y in new_colored_cells:
+                color = 'yellow'
+                plt.fill_between([y - 0.5, y + 0.5], x - 0.5,
+                                 x + 0.5, color=color, alpha=0.5)
+
+            new_colored_cells.clear()
+
+            for x, y, step in memory:
+                if step == i: 
+                    color = 'blue'
+                    new_colored_cells.append((x, y))
+                    plt.fill_between([y - 0.5, y + 0.5], x - 0.5,
+                                     x + 0.5, color=color, alpha=0.5)
+
+            plt.xticks(range(len(maze[0])))
+            plt.yticks(range(len(maze)))
+            plt.gca().set_xticks(
+                [x - 0.5 for x in range(1, len(maze[0]))], minor=True)
+            plt.gca().set_yticks(
+                [y - 0.5 for y in range(1, len(maze))], minor=True)
+            plt.grid(which="minor", color="black", linestyle='-', linewidth=2)
+            plt.axis('on')
+            plt.pause(interval)
+        plt.show()
+
+
+interval = 0.25
+
+n, m = map(int, input().split())
+maze = []
+for _ in range(n):
+    row = list(map(int, input().split()))
+    maze.append(row)
+
+path, memory = bfs(maze, n, m)
+visualize_maze_with_path(maze, path, interval, memory)
+```
+
+
+
+### • 3.3: Dijkstra
+
+```python
+import matplotlib.pyplot as plt
+import queue
+directions = [(1, 0), (-1, 0), (0, 1), (0, -1)]
+
+
+def dijkstra(maze, n, m):
+    memory = [(0, 0, 0)]
+    distances = {(i, j): float('inf') for i in range(n) for j in range(m)}
+    distances[(0, 0)] = 0
+    pq = queue.PriorityQueue()
+    pq.put((0, (0, 0)))
+    parents = [[None] * m for _ in range(n)]
+    path = []
+    while queue:
+        steps, (row, col) = pq.get()
+        if (row, col) == (n - 1, m - 1):
+            path.append((row, col, steps))
+            print(steps)
+            while steps:
+                steps -= 1
+                row, col = parents[row][col]
+                path.append((row, col, steps))
+            path.reverse()
+            return path, memory
+        for dr, dc in directions:
+            new_row, new_col = row + dr, col + dc
+            if 0 <= new_row < n and 0 <= new_col < m and maze[new_row][new_col] == 0:
+                if steps + 1 < distances[(new_row, new_col)]:
+                    distances[(new_row, new_col)] = steps + 1
+                    memory.append((new_row, new_col, steps + 1))
+                    pq.put((steps + 1, (new_row, new_col)))
+                    parents[new_row][new_col] = (row, col)
+
+
+def visualize_maze_with_path(maze, path, interval, memory):
+    if path:
+        path_x, path_y, steps = zip(*path)
+        plt.figure(figsize=(len(maze[0])/2, len(maze)/2))
+        plt.imshow(maze, cmap='Greys', interpolation='nearest') 
+
+        new_colored_cells = []
+
+        for i in range(len(path)):
+            plt.plot(path_y[:i + 1], path_x[:i + 1], marker='o',
+                     markersize=8, color='red', linewidth=3)
+
+            for x, y in new_colored_cells:
+                color = 'yellow'
+                plt.fill_between([y - 0.5, y + 0.5], x - 0.5,
+                                 x + 0.5, color=color, alpha=0.5)
+
+            new_colored_cells.clear()
+
+            for x, y, step in memory:
+                if step == i: 
+                    color = 'blue'
+                    new_colored_cells.append((x, y))
+                    plt.fill_between([y - 0.5, y + 0.5], x - 0.5,
+                                     x + 0.5, color=color, alpha=0.5)
+
+            plt.xticks(range(len(maze[0])))
+            plt.yticks(range(len(maze)))
+            plt.gca().set_xticks(
+                [x - 0.5 for x in range(1, len(maze[0]))], minor=True)
+            plt.gca().set_yticks(
+                [y - 0.5 for y in range(1, len(maze))], minor=True)
+            plt.grid(which="minor", color="black", linestyle='-', linewidth=2)
+            plt.axis('on')
+            plt.pause(interval)
+        plt.show()
+
+
+interval = 0.25
+
+n, m = map(int, input().split())
+maze = []
+for _ in range(n):
+    row = list(map(int, input().split()))
+    maze.append(row)
+
+path, memory = dijkstra(maze, n, m)
+visualize_maze_with_path(maze, path, interval, memory)
 
 ```
 
-​	同样使用`priority_queue`保证了每个处理的节点都是当前步数和估计剩余步数之和最小的节点。每次尝试将空格与周边存在的邻格交换，直到与目标状态一致。会使用`map`记录访问过的节点以及对应的`fn`，如果访问过的节点的`fn`更新后会比`map`记录中的小，那么就会修改`map`并将节点修改为新状态加入`priority_queue`。函数`f`是评价函数$f(n)=g(n)+h(n)$，$h(n)$的计算方法在这里是计算1~8到正确位置的曼哈顿距离。A*算法的主要精髓在评价函数$f(n)=g(n)+h(n)$。*相比于Dijkstra算法，A*算法在启发式函数的指导下能够更加高效地找到最短路径。当$h(n)=0$ 时算法变为Dijkstra；当$h(n)=0$ 并且边权为1时变为 bfs。
+
+
+### • 3.4: A star
+
+```python
+import matplotlib.pyplot as plt
+import queue
+directions = [(1, 0), (-1, 0), (0, 1), (0, -1)]
+
+
+def A(maze, n, m):
+    visited = set()
+    visited.add((0, 0))
+    memory = [(0, 0, 0)]
+    distances = {(i, j): float('inf') for i in range(n) for j in range(m)}
+    distances[(0, 0)] = 0
+    pq = queue.PriorityQueue()
+    pq.put((n + m - 2, (0, 0, 0)))
+    parents = [[None] * m for _ in range(n)]
+    path = []
+    while queue:
+        dis, (row, col, steps) = pq.get()
+        if (row, col) == (n - 1, m - 1):
+            path.append((row, col, steps))
+            print(steps)
+            while steps:
+                steps -= 1
+                row, col = parents[row][col]
+                path.append((row, col, steps))
+            path.reverse()
+            return path, memory
+        for dr, dc in directions:
+            new_row, new_col = row + dr, col + dc
+            if 0 <= new_row < n and 0 <= new_col < m and maze[new_row][new_col] == 0 and (new_row, new_col) not in visited:
+                visited.add((new_row, new_col))
+                new_dist = steps + abs(n - 1 - row) + abs(m - 1 - col)
+                memory.append((new_row, new_col, steps + 1))
+                pq.put((new_dist, (new_row, new_col, steps + 1)))
+                parents[new_row][new_col] = (row, col)
+
+
+def visualize_maze_with_path(maze, path, interval, memory):
+    if path:
+        path_x, path_y, steps = zip(*path)
+        plt.figure(figsize=(len(maze[0])/2, len(maze)/2))  
+        plt.imshow(maze, cmap='Greys', interpolation='nearest')  
+        new_colored_cells = []
+
+        for i in range(len(path)):
+            plt.plot(path_y[:i + 1], path_x[:i + 1], marker='o',
+                     markersize=8, color='red', linewidth=3)
+
+            for x, y in new_colored_cells:
+                color = 'yellow'
+                plt.fill_between([y - 0.5, y + 0.5], x - 0.5,
+                                 x + 0.5, color=color, alpha=0.5)
+
+            new_colored_cells.clear()
+
+            for x, y, step in memory:
+                if step == i: 
+                    color = 'blue'
+                    new_colored_cells.append((x, y))
+                    plt.fill_between([y - 0.5, y + 0.5], x - 0.5,
+                                     x + 0.5, color=color, alpha=0.5)
+
+            plt.xticks(range(len(maze[0])))
+            plt.yticks(range(len(maze)))
+            plt.gca().set_xticks(
+                [x - 0.5 for x in range(1, len(maze[0]))], minor=True)
+            plt.gca().set_yticks(
+                [y - 0.5 for y in range(1, len(maze))], minor=True)
+            plt.grid(which="minor", color="black", linestyle='-', linewidth=2)
+            plt.axis('on')
+            plt.pause(interval)
+        plt.show()
+
+
+interval = 0.25
+
+n, m = map(int, input().split())
+maze = []
+for _ in range(n):
+    row = list(map(int, input().split()))
+    maze.append(row)
+
+path, memory = A(maze, n, m)
+visualize_maze_with_path(maze, path, interval, memory)
+```
+
+
 
 ## 小练习
 
