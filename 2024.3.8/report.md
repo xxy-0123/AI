@@ -765,7 +765,9 @@ visualize_maze_with_path(maze, path, interval, memory)
 
 ​	此处`dfs` 函数的时间复杂度和空间复杂度均为 $O(N)$，其中 $N$ 是迷宫中的格子数。
 
-![dfs.gif](dfs.gif)
+​	可视化部分：记录搜索格子的顺序，以搜索次序迭代展示，黄色是已经搜索过的格子，蓝色是最近一次搜索的格子。
+
+![dfs.gif](animation\dfs.gif)
 
 ### • 3.2: BFS
 
@@ -773,7 +775,6 @@ visualize_maze_with_path(maze, path, interval, memory)
 import matplotlib.pyplot as plt
 
 directions = [(1, 0), (-1, 0), (0, 1), (0, -1)]
-
 
 def bfs(maze, n, m):
     visited = set()
@@ -852,7 +853,19 @@ path, memory = bfs(maze, n, m)
 visualize_maze_with_path(maze, path, interval, memory)
 ```
 
+​	bfs函数用于进行搜索，使用队列`queue`来存储后续要访问的节点。每次探索时，会通过二维列表`parents` 记录父节点方便回溯，最后得到路径列表`path`和搜索过程中的内存列表`memory`，其中`path`和`memory`的元素都由三元组组成，包含 (row, col, steps)，方便在可视化时按步数动态展示。
 
+​	此处`bfs` 函数的时间复杂度和空间复杂度均为 $O(N)$，其中 $N$ 是迷宫中的格子数。
+
+​	可视化部分：记录搜索格子的步数，黄色是已经搜索过的格子，蓝色是最近一次搜索的格子。由于bfs逐层搜索，因此以步数迭代展示，采用类似洪水填充法。
+
+![bfs.gif](animation\bfs.gif)
+
+照理来说这是一张gif，但是pdf无法展示，可以点开看[github上的链接]()。
+
+以下为最终效果
+
+![3_2](3_2.png)
 
 ### • 3.3: Dijkstra
 
@@ -942,7 +955,13 @@ visualize_maze_with_path(maze, path, interval, memory)
 
 ```
 
+​	bfs函数用于进行搜索，使用队列`queue`来存储后续要访问的节点。每次探索时，会通过二维列表`parents` 记录父节点方便回溯，最后得到路径列表`path`和搜索过程中的内存列表`memory`，其中`path`和`memory`的元素都由三元组组成，包含 (row, col, steps)，方便在可视化时按步数动态展示。
 
+​	此处`bfs` 函数的时间复杂度和空间复杂度均为 $O(N)$，其中 $N$ 是迷宫中的格子数。
+
+​	可视化部分：记录搜索格子的步数，由于bfs逐层搜索，因此以步数迭代展示，采用类似洪水填充法。
+
+![dijkstra.gif](animation\dijkstra.gif)
 
 ### • 3.4: A star
 
@@ -1032,7 +1051,7 @@ path, memory = A(maze, n, m)
 visualize_maze_with_path(maze, path, interval, memory)
 ```
 
-
+![A.gif](animation\A.gif)
 
 ## 小练习
 
