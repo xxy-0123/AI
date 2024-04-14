@@ -769,6 +769,12 @@ visualize_maze_with_path(maze, path, interval, memory)
 
 ![dfs.gif](animation\dfs.gif)
 
+照理来说这是一张gif，但是pdf无法展示，可以点开看[AI/2024.3.8/animation/dfs.gif at main · 18702193515/AI (github.com)](https://github.com/18702193515/AI/blob/main/2024.3.8/animation/dfs.gif)。**==辛苦做的，务必看看！！！==**
+
+以下为最终效果
+
+![3_1](3_1.png)
+
 ### • 3.2: BFS
 
 ```python
@@ -861,7 +867,7 @@ visualize_maze_with_path(maze, path, interval, memory)
 
 ![bfs.gif](animation\bfs.gif)
 
-照理来说这是一张gif，但是pdf无法展示，可以点开看[github上的链接]()。
+照理来说这是一张gif，但是pdf无法展示，可以点开看[AI/2024.3.8/animation/bfs.gif at main · 18702193515/AI (github.com)](https://github.com/18702193515/AI/blob/main/2024.3.8/animation/bfs.gif)。**==辛苦做的，务必看看！！！==**
 
 以下为最终效果
 
@@ -955,13 +961,21 @@ visualize_maze_with_path(maze, path, interval, memory)
 
 ```
 
-​	bfs函数用于进行搜索，使用队列`queue`来存储后续要访问的节点。每次探索时，会通过二维列表`parents` 记录父节点方便回溯，最后得到路径列表`path`和搜索过程中的内存列表`memory`，其中`path`和`memory`的元素都由三元组组成，包含 (row, col, steps)，方便在可视化时按步数动态展示。
+​	dijkstra函数用于进行搜索，使用优先队列`pq`来存储后续要访问的节点，并且在内部会以到达的步数step将节点从小到大排序，保证每次弹出的都是距离初始点最短的路径。每次探索时，会通过二维列表`parents` 记录父节点方便回溯，`distances` 字典用于记录起点到各个单元格的最短距离。最后得到路径列表`path`和搜索过程中的内存列表`memory`，其中`path`和`memory`的元素都由三元组组成，包含 (row, col, steps)，方便在可视化时按步数动态展示。
 
-​	此处`bfs` 函数的时间复杂度和空间复杂度均为 $O(N)$，其中 $N$ 是迷宫中的格子数。
+​	此处`dijkstra` 函数的时间复杂度为 $O(NlogN)$，由于边权都是1，优先队列维护堆需要log级的时间开销，并不经济。空间复杂度由于迷宫本身的存在则仍是 $O(N)$其。中 $N$ 是迷宫中的格子数。
 
-​	可视化部分：记录搜索格子的步数，由于bfs逐层搜索，因此以步数迭代展示，采用类似洪水填充法。
+​	可视化部分：记录搜索格子的步数，由于dijkstra在边权为1的情况下与bfs等价，因此也是逐层搜索，因此以步数迭代展示，采用类似洪水填充法。
 
 ![dijkstra.gif](animation\dijkstra.gif)
+
+照理来说这是一张gif，但是pdf无法展示，可以点开看[AI/2024.3.8/animation/dijkstra.gif at main · 18702193515/AI (github.com)](https://github.com/18702193515/AI/blob/main/2024.3.8/animation/dijkstra.gif)。**==辛苦做的，务必看看！！！==**
+
+以下为最终效果
+
+![3_3](3_3.png)
+
+
 
 ### • 3.4: A star
 
@@ -975,8 +989,6 @@ def A(maze, n, m):
     visited = set()
     visited.add((0, 0))
     memory = [(0, 0, 0)]
-    distances = {(i, j): float('inf') for i in range(n) for j in range(m)}
-    distances[(0, 0)] = 0
     pq = queue.PriorityQueue()
     pq.put((n + m - 2, (0, 0, 0)))
     parents = [[None] * m for _ in range(n)]
@@ -1051,7 +1063,19 @@ path, memory = A(maze, n, m)
 visualize_maze_with_path(maze, path, interval, memory)
 ```
 
+​	A star函数用于进行搜索，使用优先队列`pq`来存储后续要访问的节点，并且在内部会以评价函数$f(n)=g(n)+h(n)$的结果大小将节点从小到大排序，保证每次弹出的都是评价函数$f(n)=g(n)+h(n)$结果最小的节点，评价函数的估计方法是曼哈顿距离。每次探索时，会通过二维列表`parents` 记录父节点方便回溯。最后得到路径列表`path`和搜索过程中的内存列表`memory`，其中`path`和`memory`的元素都由三元组组成，包含 (row, col, steps)，方便在可视化时按步数动态展示。
+
+​	此处`A*` 函数的时间复杂度为 $O(NlogN)$，每次加入新节点，优先队列维护堆需要log级的时间开销。空间复杂度由于迷宫本身的存在则仍是 $O(N)$其。中 $N$ 是迷宫中的格子数。
+
+​	可视化部分：记录搜索格子的步数，由于dijkstra在边权为1的情况下与bfs等价，因此也是逐层搜索，因此以步数迭代展示，采用类似洪水填充法。
+
 ![A.gif](animation\A.gif)
+
+照理来说这是一张gif，但是pdf无法展示，可以点开看[AI/2024.3.8/animation/A.gif at main · 18702193515/AI (github.com)](https://github.com/18702193515/AI/blob/main/2024.3.8/animation/A.gif)。**==辛苦做的，务必看看！！！==**
+
+以下为最终效果
+
+![3_4](3_4.png)
 
 ## 小练习
 

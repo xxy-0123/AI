@@ -114,7 +114,7 @@ def A(maze, n, m):
             new_row, new_col = row + dr, col + dc
             if 0 <= new_row < n and 0 <= new_col < m and maze[new_row][new_col] == 0 and (new_row, new_col) not in visited:
                 visited.add((new_row, new_col))
-                new_dist = steps + abs(n - 1 - row) + abs(m - 1 - col)
+                new_dist = steps + abs(n - 1 - new_row) + abs(m - 1 - new_col)
                 memory.append((new_row, new_col, steps + 1))
                 pq.put((new_dist, (new_row, new_col, steps + 1)))
                 parents[new_row][new_col] = (row, col)
@@ -171,9 +171,9 @@ k=[0]
 
 new_colored_cells = []
 #path, memory = bfs(maze, n, m)
-path, memory = dfs(maze, n, m)
+#path, memory = dfs(maze, n, m)
 #path, memory = dijkstra(maze, n, m)
-#path, memory = A(maze, n, m)
+path, memory = A(maze, n, m)
 
 ax=plt.figure(figsize=(len(maze[0])/2, len(maze)/2))
 ani = animation.FuncAnimation(
@@ -187,6 +187,6 @@ ani = animation.FuncAnimation(
 
 timestamp = datetime.datetime.now().strftime("%m%d%H%M")
 #ani.save(f"bfs_{timestamp}.gif", fps=5, writer="pillow")
-ani.save(f"dfs_{timestamp}.gif", fps=5, writer="pillow")
+#ani.save(f"dfs_{timestamp}.gif", fps=5, writer="pillow")
 #ani.save(f"dijkstra_{timestamp}.gif", fps=5, writer="pillow")
-#ani.save(f"A_{timestamp}.gif", fps=5, writer="pillow")
+ani.save(f"A_{timestamp}.gif", fps=5, writer="pillow")
