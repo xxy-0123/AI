@@ -2,7 +2,9 @@ import matplotlib.pyplot as plt
 import queue
 import matplotlib.animation as animation
 import datetime
-
+import os
+from tqdm import tqdm
+import sys
 
 directions = [(1, 0), (-1, 0), (0, 1), (0, -1)]
 
@@ -16,18 +18,30 @@ def bfs(maze, n, m):
     path = []
     while queue:
         row, col, steps = queue.pop(0)
-        if (row, col) == (n - 1, m - 1):
-            path.append((row, col, steps))
-            print(steps)
-            while steps:
-                steps -= 1
-                row, col = parents[row][col]
-                path.append((row, col, steps))
-            path.reverse()
-            return path, memory
+        # if (row, col) == (n - 1, m - 1):
+        #     path.append((row, col, steps))
+        #     #print(steps)
+        #     while steps:
+        #         steps -= 1
+        #         row, col = parents[row][col]
+        #         path.append((row, col, steps))
+        #     path.reverse()
+        #     return path, memory
         for dr, dc in directions:
             new_row, new_col = row + dr, col + dc
             if 0 <= new_row < n and 0 <= new_col < m and maze[new_row][new_col] == 0 and (new_row, new_col) not in visited:
+                if (new_row, new_col) == (n - 1, m - 1):
+                    steps+=1
+                    parents[new_row][new_col] = (row, col)
+                    path.append((new_row, new_col, steps))
+                    memory.append((new_row, new_col, steps))
+                    while steps:
+                        steps -= 1
+                        new_row, new_col = parents[new_row][new_col]
+                        path.append((new_row, new_col, steps))
+                    path.reverse()
+                    return path, memory
+                
                 visited.add((new_row, new_col))
                 memory.append((new_row, new_col, steps + 1))
                 queue.append((new_row, new_col, steps + 1))
@@ -70,18 +84,29 @@ def dijkstra(maze, n, m):
     path = []
     while queue:
         steps, (row, col) = pq.get()
-        if (row, col) == (n - 1, m - 1):
-            path.append((row, col, steps))
-            print(steps)
-            while steps:
-                steps -= 1
-                row, col = parents[row][col]
-                path.append((row, col, steps))
-            path.reverse()
-            return path, memory
+        # if (row, col) == (n - 1, m - 1):
+        #     path.append((row, col, steps))
+        #     #print(steps)
+        #     while steps:
+        #         steps -= 1
+        #         row, col = parents[row][col]
+        #         path.append((row, col, steps))
+        #     path.reverse()
+        #     return path, memory
         for dr, dc in directions:
             new_row, new_col = row + dr, col + dc
             if 0 <= new_row < n and 0 <= new_col < m and maze[new_row][new_col] == 0:
+                if (new_row, new_col) == (n - 1, m - 1):
+                    steps+=1
+                    path.append((new_row, new_col, steps))
+                    memory.append((new_row, new_col, steps))
+                    parents[new_row][new_col] = (row, col)
+                    while steps:
+                        steps -= 1
+                        new_row, new_col = parents[new_row][new_col]
+                        path.append((new_row, new_col, steps))
+                    path.reverse()
+                    return path, memory
                 if steps + 1 < distances[(new_row, new_col)]:
                     distances[(new_row, new_col)] = steps + 1
                     memory.append((new_row, new_col, steps + 1))
@@ -101,18 +126,29 @@ def A(maze, n, m):
     path = []
     while queue:
         dis, (row, col, steps) = pq.get()
-        if (row, col) == (n - 1, m - 1):
-            path.append((row, col, steps))
-            print(steps)
-            while steps:
-                steps -= 1
-                row, col = parents[row][col]
-                path.append((row, col, steps))
-            path.reverse()
-            return path, memory
+        # if (row, col) == (n - 1, m - 1):
+        #     path.append((row, col, steps))
+        #     #print(steps)
+        #     while steps:
+        #         steps -= 1
+        #         row, col = parents[row][col]
+        #         path.append((row, col, steps))
+        #     path.reverse()
+        #     return path, memory
         for dr, dc in directions:
             new_row, new_col = row + dr, col + dc
             if 0 <= new_row < n and 0 <= new_col < m and maze[new_row][new_col] == 0 and (new_row, new_col) not in visited:
+                if (new_row, new_col) == (n - 1, m - 1):
+                    steps+=1
+                    path.append((new_row, new_col, steps))
+                    memory.append((new_row, new_col, steps))
+                    parents[new_row][new_col] = (row, col)
+                    while steps:
+                        steps -= 1
+                        new_row, new_col = parents[new_row][new_col]
+                        path.append((new_row, new_col, steps))
+                    path.reverse()
+                    return path, memory
                 visited.add((new_row, new_col))
                 new_dist = steps + abs(n - 1 - new_row) + abs(m - 1 - new_col)
                 memory.append((new_row, new_col, steps + 1))
@@ -120,18 +156,19 @@ def A(maze, n, m):
                 parents[new_row][new_col] = (row, col)
 
 
-def visualize_maze_with_path(frame, maze, path, memory, k):
-    if frame <= path[-1][2]+1:
+def visualize_maze_with_path(frame, maze, path, memory, k, new_colored_cells):
+    if frame <= path[-1][2]+2:
         path_x, path_y, steps = zip(*path)
         
         plt.imshow(maze, cmap='Greys', interpolation='nearest')
 
         
         i=frame
-        if(i==steps[k[0]]):
-            plt.plot(path_y[:k[0] + 1], path_x[:k[0] + 1], marker='o',
-                    markersize=8, color='red', linewidth=3)
-            k[0]+=1
+        if k[0]<len(steps):
+            if(i==steps[k[0]]):
+                plt.plot(path_y[:k[0] + 1], path_x[:k[0] + 1], marker='o',
+                        markersize=8, color='red', linewidth=3)
+                k[0]+=1
 
         for x, y in new_colored_cells:
             color = 'yellow'
@@ -158,6 +195,34 @@ def visualize_maze_with_path(frame, maze, path, memory, k):
 
         return plt.gca()
 
+
+def generate_animation_and_stats(algorithm_name, path_func, maze, n, m, output_folder):
+    path, memory = path_func(maze, n, m)
+    total_path_length = len(path) - 1
+    total_searched_points = len(memory)
+    stats_md = f"### {algorithm_name}\n\n"
+    stats_md += f"- Total Path Length: {total_path_length}\n"
+    stats_md += f"- Total Searched Points: {total_searched_points}\n\n"
+
+    new_colored_cells = []
+    k = [0]
+    ax = plt.figure(figsize=(len(maze[0]) / 2, len(maze) / 2))
+    ani = animation.FuncAnimation(
+        ax,
+        visualize_maze_with_path,
+        frames=range(path[-1][2] + 2),
+        fargs=(maze, path, memory, k, new_colored_cells),
+        interval=interval
+    )
+
+    timestamp = datetime.datetime.now().strftime("%m%d%H%M")
+    output_folder = os.path.join(os.getcwd(), output_folder)
+    os.makedirs(output_folder, exist_ok=True)
+    gif_filename = f"{algorithm_name}_{timestamp}.gif"
+    gif_filepath = os.path.join(output_folder, gif_filename)
+    ani.save(gif_filepath, fps=5, writer="pillow")
+    stats_md += f"![{algorithm_name} Animation]({gif_filepath})\n\n"
+    return stats_md
 
 def getAllNab(node,maze):
     ret=list()
@@ -250,39 +315,38 @@ def gen_maze(S,lenx,leny):
     T=tmp
     return maze,T     
 
-interval = 0.0001
+if __name__ == "__main__":
+    interval = 0.0001
+    output_folder = "maze_search"
 
-n, m = map(int, input().split())
-# maze = []
-# for _ in range(n):
-#     row = list(map(int, input().split()))
-#     maze.append(row)
+    n, m = map(int, input().split())
+    # maze = []
+    # for _ in range(n):
+    #     row = list(map(int, input().split()))
+    #     maze.append(row)
 
-S=(0,0)
-maze=gen_maze(S,n,m)[0]
+    S=(0,0)
+    maze=gen_maze(S,n,m)[0]
 
-k=[0]
+    markdown_content = ""
+    algorithms = [
+        ("BFS", bfs),
+        ("DFS", dfs),
+        ("Dijkstra", dijkstra),
+        ("A_star", A)
+    ]
+    
+    with tqdm(total=len(algorithms), desc="Generating Statistics and GIFs") as pbar:
+        for algorithm_name, path_func in algorithms:
+            markdown_content += generate_animation_and_stats(algorithm_name, path_func, maze, n, m, output_folder)
+            pbar.update(1)
 
-new_colored_cells = []
-#path, memory = bfs(maze, n, m)
-path, memory = dfs(maze, n, m)
-#path, memory = dijkstra(maze, n, m)
-#path, memory = A(maze, n, m)
+    output_folder_path = os.path.join(os.getcwd(), output_folder)
+    os.makedirs(output_folder_path, exist_ok=True)
+    output_filepath = os.path.join(output_folder_path, "maze_statistics.md")
 
-ax=plt.figure(figsize=(len(maze[0])/2, len(maze)/2))
-ani = animation.FuncAnimation(
-    ax,
-    visualize_maze_with_path,
-    frames=range(path[-1][2]+1),
-    fargs=(maze, path, memory, k),
-    interval=interval
-)
+    with open(output_filepath, "w") as f:
+        f.write(markdown_content)
 
-
-timestamp = datetime.datetime.now().strftime("%m%d%H%M")
-#ani.save(f"bfs_{timestamp}.gif", fps=5, writer="pillow")
-ani.save(f"dfs_{timestamp}.gif", fps=10, writer="pillow")
-#ani.save(f"dijkstra_{timestamp}.gif", fps=5, writer="pillow")
-#ani.save(f"A_{timestamp}.gif", fps=5, writer="pillow")
-
-
+    print("end")
+    sys.exit()
