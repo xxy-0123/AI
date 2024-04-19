@@ -150,6 +150,96 @@ def paint_maze(plt, maze, path_x, path_y, steps, memory, iterator, new_colored_c
 
         return new_colored_cells
         
+def getAllNab(node,maze):
+    ret=list()
+    lenx=len(maze)
+    leny=len(maze[0])
+    if(node[0]>0):
+        ret.append((node[0]-1,node[1]))
+    if(node[0]<lenx-1):
+        ret.append((node[0]+1,node[1]))
+    if(node[1]>0):
+        ret.append((node[0],node[1]-1))
+    if(node[1]<leny-1):
+        ret.append((node[0],node[1]+1))
+    return ret
+
+import random
+
+def gen_maze(S,lenx,leny):
+    maze=list()
+    lock=list()
+    T=S
+    for i in range(0,lenx):
+        now=list()
+        now1=list()
+        for j in range(0,leny):
+            now.append(1)
+            now1.append(0)
+        maze.append(now)
+        lock.append(now1)
+    q=queue.Queue()
+    q.put(S)
+    maze[S[0]][S[1]]=0
+    cnt=0
+    st=list()
+    for i in getAllNab(S,maze):
+        lock[i[0]][i[1]]+=1
+    while(not q.empty()):
+        now=q.get()
+        st.append(now)
+        cnt+=1
+        if(cnt>lenx+leny):
+            if(random.random()<0.003*cnt):
+                break
+        #print(now,maze[now[0]][now[1]],'?')
+        nab=getAllNab(now,maze)
+        potential_next=list()
+        for i in nab:
+            if(lock[i[0]][i[1]]<=1 and maze[i[0]][i[1]]>0):
+                #print(i,maze[i[0]][i[1]],'!')
+                potential_next.append(i)
+        for i in potential_next:
+            p=float(1)/len(potential_next)
+            if(i[0]+i[1]>now[0]+now[1]):pass
+            else:p-=0.1
+            if(len(getAllNab(i,maze))<4):
+                p-=0.5
+            if(random.random()<p or i==potential_next[len(potential_next)-1]):
+                for j in getAllNab(i,maze):
+                    lock[j[0]][j[1]]+=1
+                q.put(i)
+                T=i
+                maze[i[0]][i[1]]=0
+                break
+    tot_st=st.copy()
+    st.pop()
+    while(len(st)>0):
+        idx=int(random.random()*len(st))
+        i=st[idx]
+        st.pop(idx)
+        for j in getAllNab(i,maze):
+            if(lock[j[0]][j[1]]<=1):
+                if(random.random()<0.9):
+                    st.append(j)
+                    tot_st.append(j)
+                    maze[j[0]][j[1]]=0
+                    for k in getAllNab(j,maze):
+                        lock[k[0]][k[1]]+=1
+
+    T=tot_st[int(random.random()*len(tot_st))]
+
+    tmp=tot_st[0]
+    for i in tot_st:
+        if(i[0]+i[1]>tmp[0]+tmp[1]):tmp=i
+    while(tmp[0]<len(maze)-1):
+        tmp=(tmp[0]+1,tmp[1])
+        maze[tmp[0]][tmp[1]]=0
+    while(tmp[1]<len(maze[0])-1):
+        tmp=(tmp[0],tmp[1]+1)
+        maze[tmp[0]][tmp[1]]=0
+    T=tmp
+    return maze,T  
 
 def visualize_maze_with_path(maze, interval, bfs_path, bfs_memory,  dfs_path, dfs_memory, dijkstra_path, dijkstra_memory, A_path, A_memory):
     fig, axs = plt.subplots(2, 2, figsize=(16, 16), sharex=True, sharey=True)
@@ -180,10 +270,13 @@ def visualize_maze_with_path(maze, interval, bfs_path, bfs_memory,  dfs_path, df
 interval = 0.0001
 
 n, m = map(int, input().split())
-maze = []
-for _ in range(n):
-    row = list(map(int, input().split()))
-    maze.append(row)
+# maze = []
+# for _ in range(n):
+#     row = list(map(int, input().split()))
+#     maze.append(row)
+
+S=(0,0)
+maze=gen_maze(S,n,m)[0]
 
 bfs_path, bfs_memory = bfs(maze, n, m)
 dfs_path, dfs_memory = dfs(maze, n, m)
